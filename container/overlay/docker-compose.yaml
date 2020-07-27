@@ -4,6 +4,29 @@
 version: "2.4"
 
 services:
+  redis:
+    image: redis
+    container_name: redis
+    command: redis-server
+    expose:
+      - "6379"
+    ports:
+      - "6379:6379"
+    build:
+      context: .
+      dockerfile: ./redis_docker/Dockerfile-redis
+    restart: on-failure:5
+    network_mode: host
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    cpu_shares: 5
+    mem_limit: 50m
+    mem_reservation: 10m
+    pids_limit: 100
+
 
   aio-demo:
     image: aio-demo
